@@ -16,12 +16,12 @@ ADD ./src /var/www/html
 
 #Rootless/Owner
 RUN chown -R apache:apache /var/www/html && \
-    chmod 710 /run/httpd && \
-    chown apache:apache /run/httpd && \
-    chmod 700 /run/httpd/htcacheclean && \
-    chown apache:apache /run/httpd/htcacheclean && \
-    chown -R apache /var/log/httpd && \
-    setcap cap_net_bind_service=+epi /usr/sbin/httpd
+#    chmod 710 /run/httpd && \
+#    chown apache:apache /run/httpd && \
+#    chmod 700 /run/httpd/htcacheclean && \
+#    chown apache:apache /run/httpd/htcacheclean && \
+#    chown -R apache /var/log/httpd && \
+#    setcap cap_net_bind_service=+epi /usr/sbin/httpd
 
 #Permissions
 RUN /bin/bash -c 'find /var/www/html -type f -exec chmod 0640 {} \;'
@@ -44,7 +44,7 @@ RUN echo "ServerName localhost" >> /etc/httpd/conf/httpd.conf && \
     echo "TraceEnable Off" >> /etc/httpd/conf/httpd.conf
 
 #User
-USER apache
+USER root
 
 #Expose
 EXPOSE 80
