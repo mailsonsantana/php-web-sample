@@ -15,7 +15,7 @@ RUN yum install --disablerepo=* --enablerepo=ubi-8-appstream --enablerepo=ubi-8-
 ADD ./src /var/www/html
 
 #Rootless/Owner
-RUN chown -R apache:apache /var/www/html && \
+RUN chown -R apache:apache /var/www/html
 #    chmod 710 /run/httpd && \
 #    chown apache:apache /run/httpd && \
 #    chmod 700 /run/httpd/htcacheclean && \
