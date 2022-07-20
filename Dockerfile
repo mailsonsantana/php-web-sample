@@ -15,13 +15,23 @@ RUN yum install --disablerepo=* --enablerepo=ubi-8-appstream --enablerepo=ubi-8-
 ADD ./src /var/www/html
 
 #Rootless/Owner
-RUN chown -R apache:apache /var/www/html
+#RUN chown -R apache:apache /var/www/html
 #    chmod 710 /run/httpd && \
 #    chown apache:apache /run/httpd && \
 #    chmod 700 /run/httpd/htcacheclean && \
 #    chown apache:apache /run/httpd/htcacheclean && \
 #    chown -R apache /var/log/httpd && \
 #    setcap cap_net_bind_service=+epi /usr/sbin/httpd
+
+RUN chown apache:0 /etc/httpd/conf/httpd.conf && \
+    chmod g+r /etc/httpd/conf/httpd.conf && \
+    chown apache:0 /var/log/httpd && \
+    chmod g+rwX /var/log/httpd && \
+    chown apache:0 /var/run/httpd && \
+    chmod g+rwX /var/run/httpd && \
+    chown -R apache:0 /var/www/html && \
+    chmod -R g+rwX /var/www/html
+
 
 #Permissions
 RUN /bin/bash -c 'find /var/www/html -type f -exec chmod 0640 {} \;'
@@ -44,7 +54,7 @@ RUN echo "ServerName localhost" >> /etc/httpd/conf/httpd.conf && \
     echo "TraceEnable Off" >> /etc/httpd/conf/httpd.conf
 
 #User
-USER root
+USER apache
 
 #Expose
 EXPOSE 80
