@@ -23,7 +23,8 @@ ADD ./src /var/www/html
 #    chown -R apache /var/log/httpd && \
 #    setcap cap_net_bind_service=+epi /usr/sbin/httpd
 
-RUN chown apache:0 /etc/httpd/conf/httpd.conf && \
+RUN sed -i "s/Listen 80/Listen 8080/" /etc/httpd/conf/httpd.conf && \
+    chown apache:0 /etc/httpd/conf/httpd.conf && \
     chmod g+r /etc/httpd/conf/httpd.conf && \
     chown apache:0 /var/log/httpd && \
     chmod g+rwX /var/log/httpd && \
@@ -32,6 +33,8 @@ RUN chown apache:0 /etc/httpd/conf/httpd.conf && \
     chown -R apache:0 /var/www/html && \
     chmod -R g+rwX /var/www/html
 
+RUN ln -sf /proc/self/fd/1 /var/log/httpd/access_log
+RUN ln -sf /proc/self/fd/1 /var/log/httpd/error_log
 
 #Permissions
 RUN /bin/bash -c 'find /var/www/html -type f -exec chmod 0640 {} \;'
@@ -57,7 +60,7 @@ RUN echo "ServerName localhost" >> /etc/httpd/conf/httpd.conf && \
 USER apache
 
 #Expose
-EXPOSE 80
+EXPOSE 8080
 
 #Start
 CMD ["-D", "FOREGROUND"]
