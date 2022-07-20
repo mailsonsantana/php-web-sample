@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi
 
 #Envs
 ENV PHP_VERSION=7.4\
-    NAME=Manutencao
+    NAME=Hello-Wolrd
 
 #Update/Install
 RUN yum -y module enable php:$PHP_VERSION
@@ -15,14 +15,6 @@ RUN yum install --disablerepo=* --enablerepo=ubi-8-appstream --enablerepo=ubi-8-
 ADD ./src /var/www/html
 
 #Rootless/Owner
-#RUN chown -R apache:apache /var/www/html
-#    chmod 710 /run/httpd && \
-#    chown apache:apache /run/httpd && \
-#    chmod 700 /run/httpd/htcacheclean && \
-#    chown apache:apache /run/httpd/htcacheclean && \
-#    chown -R apache /var/log/httpd && \
-#    setcap cap_net_bind_service=+epi /usr/sbin/httpd
-
 RUN sed -i "s/Listen 80/Listen 8080/" /etc/httpd/conf/httpd.conf && \
     chown apache:0 /etc/httpd/conf/httpd.conf && \
     chmod g+r /etc/httpd/conf/httpd.conf && \
@@ -33,8 +25,8 @@ RUN sed -i "s/Listen 80/Listen 8080/" /etc/httpd/conf/httpd.conf && \
     chown -R apache:0 /var/www/html && \
     chmod -R g+rwX /var/www/html
 
-RUN ln -sf /proc/self/fd/1 /var/log/httpd/access_log
-RUN ln -sf /proc/self/fd/1 /var/log/httpd/error_log
+RUN ln -sf /proc/self/fd/1 /var/log/httpd/access_log && \
+    ln -sf /proc/self/fd/1 /var/log/httpd/error_log
 
 #Permissions
 RUN /bin/bash -c 'find /var/www/html -type f -exec chmod 0640 {} \;'
